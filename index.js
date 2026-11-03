@@ -10,7 +10,7 @@ const fs = require('fs')
 const tmpObj = tmp.fileSync({ mode: 0o644, prefix: 'mermaid-filter-', postfix: '.err' })
 const errorLog = fs.createWriteStream(tmpObj.name)
 
-pandoc.toJSONFilter(function (ele,format,meta) {
+pandoc.toJSONFilter(function (ele, format, meta) {
   // Redirect stderr to a globally created writeable stream
   process.stderr.write = errorLog.write.bind(errorLog)
   return utils.mermaid(ele.t, ele.c, format, meta)

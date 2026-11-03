@@ -19,7 +19,9 @@ width="100%"/>
 Installation and usage
 ---------------------
 
-1. `npm install --global mermaid-filter`
+1. `npm install --global --allow-scripts=puppeteer mermaid-filter` (requires Node.js 22.13 or later)
+
+   `--allow-scripts=puppeteer` lets puppeteer download the headless Chrome that mermaid-cli renders with; recent npm versions block dependency install scripts by default. If you installed without it, run `npx puppeteer browsers install chrome-headless-shell`.
 2. To convert your markdown file `something.md` into `something.html`, use `pandoc -t html -F mermaid-filter -o something.html something.md`
 
 
@@ -49,12 +51,12 @@ Admittedly, this is uglier than the earlier syntax on top - but that's how Pando
 | Option Name | default value | env var | Notes|
 |-------------|---------------|---------|------|
 |   `caption` |             | `MERMAID_FILTER_CAPTION`| Sets `alt=` attribute on the image|
-| `format`    | png         | `MERMAID_FILTER_FORMAT` | Allowed - `svg`|
-| `width`     | 800           | `MERMAID_FILTER_WIDTH`  ||
+| `format`    | png         | `MERMAID_FILTER_FORMAT` | Allowed - `png`, `svg`, `pdf`. PDFs are fitted to the diagram|
+| `width`     | 800           | `MERMAID_FILTER_WIDTH`  |Passed to the `--size` flag of mermaid.cli (max width/height of PNGs, `max-width` of SVGs)|
 | `theme`     | default       | `MERMAID_FILTER_THEME`  |Corresponds to `--theme`  flag of mermaid.cli|
 |`background` | `white`       | `MERMAID_FILTER_BACKGROUND` |Correponds to `--backgroundColor` flag of mermaid.cli|
 | `filename`  | NA            | `MERMAID_FILTER_FILENAME`| Takes precedence |
-| `loc`| `inline` | `MERMAID_FILTER_LOC`| inline - generates a data url; `imgur` - uploads to imgur; `loc=anythingelse` saves images to folder `anythingelse`
+| `loc`| `inline` | `MERMAID_FILTER_LOC`| inline - generates a data url; `imgur` - uploads to imgur (anonymous upload; set `IMGUR_CLIENT_ID` to use your own imgur client id); `loc=anythingelse` saves images to folder `anythingelse`
 | `scale` | 1|`MERMAID_FILTER_SCALE`| |
 | `imageclass` ||`MERMAID_FILTER_IMAGECLASS`| |
 
@@ -75,7 +77,7 @@ JSON and CSS configuration
 
 Mermaid cli allows you to specify additional options in a json configuration file and a css file. `mermaid-filter`
 will look in the current working directory for `.mermaid-config.json` and `.mermaid.css` and if found, pass them in to
-mermaid cli.
+mermaid cli. Since mermaid-cli v12 the CSS file is passed to Mermaid's `themeCSS` option.
 
 Puppeteer Configuration - `mermaid-filter` will look in the current working directory for a `.puppeteer.json` and pass it
 on to mermaid cli (`-p` option of mmdc)if found
